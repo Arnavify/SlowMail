@@ -17,7 +17,6 @@ export default function AuthScreen({ onAuthed }: { onAuthed: (u: User) => void }
     e.preventDefault();
     setError(null);
     setBusy(true);
-    // Small deliberate pause, even signing in should feel unhurried.
     window.setTimeout(() => {
       const result = mode === "login" ? login(username, password) : signup(username, password);
       setBusy(false);
@@ -68,7 +67,7 @@ export default function AuthScreen({ onAuthed }: { onAuthed: (u: User) => void }
           ))}
         </div>
 
-        <form onSubmit={submit} className="space-y-3" noValidate={false}>
+        <form onSubmit={submit} className="space-y-3">
           <Field
             label="Username"
             value={username}
@@ -76,6 +75,7 @@ export default function AuthScreen({ onAuthed }: { onAuthed: (u: User) => void }
             placeholder="you"
             autoFocus
             autoComplete="username"
+            required
           />
           <Field
             label="Password"
@@ -84,6 +84,7 @@ export default function AuthScreen({ onAuthed }: { onAuthed: (u: User) => void }
             placeholder="••••"
             type="password"
             autoComplete={mode === "login" ? "current-password" : "new-password"}
+            required
           />
 
           {error && (
@@ -131,6 +132,7 @@ function Field({
   type = "text",
   autoFocus,
   autoComplete,
+  required,
 }: {
   label: string;
   value: string;
@@ -139,6 +141,7 @@ function Field({
   type?: string;
   autoFocus?: boolean;
   autoComplete?: string;
+  required?: boolean;
 }) {
   return (
     <label className="block">
@@ -148,6 +151,7 @@ function Field({
         value={value}
         autoFocus={autoFocus}
         autoComplete={autoComplete}
+        required={required}
         onChange={(e) => onChange(e.target.value)}
         placeholder={placeholder}
         className="w-full h-11 px-3.5 rounded-xl bg-[var(--color-surface)] border border-[var(--color-line)] text-sm outline-none transition-smooth focus:border-[var(--color-line-strong)] focus:ring-2 focus:ring-[var(--color-accent-soft)] placeholder:text-[var(--color-faint)]"
