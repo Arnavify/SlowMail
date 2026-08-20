@@ -17,7 +17,7 @@ export default function AuthScreen({ onAuthed }: { onAuthed: (u: User) => void }
     e.preventDefault();
     setError(null);
     setBusy(true);
-    // Small deliberate pause — even signing in should feel unhurried.
+    // Small deliberate pause, even signing in should feel unhurried.
     window.setTimeout(() => {
       const result = mode === "login" ? login(username, password) : signup(username, password);
       setBusy(false);
@@ -27,6 +27,7 @@ export default function AuthScreen({ onAuthed }: { onAuthed: (u: User) => void }
   }
 
   function useDemo() {
+    setMode("login");
     setUsername(DEMO_CREDENTIALS.username);
     setPassword(DEMO_CREDENTIALS.password);
     setError(null);
@@ -39,17 +40,19 @@ export default function AuthScreen({ onAuthed }: { onAuthed: (u: User) => void }
           <div className="w-11 h-11 rounded-full bg-[var(--color-accent-soft)] text-[var(--color-accent)] flex items-center justify-center mb-6">
             <Feather size={20} />
           </div>
-          <h1 className="font-serif text-[2rem] leading-none tracking-tight">Meridian</h1>
+          <h1 className="font-serif text-[2rem] leading-none tracking-tight">SlowMail</h1>
           <p className="text-[var(--color-muted)] text-sm mt-3 max-w-[16rem] leading-relaxed">
-            Messages that arrive when the moment does — not the instant you hit send.
+            Messages that arrive when the moment does, not the instant you hit send.
           </p>
         </div>
 
-        <div className="flex items-center gap-1 p-1 rounded-full bg-[var(--color-surface)] border border-[var(--color-line)] mb-6">
+        <div className="flex items-center gap-1 p-1 rounded-full bg-[var(--color-surface)] border border-[var(--color-line)] mb-6" role="tablist" aria-label="Account access">
           {(["login", "signup"] as Mode[]).map((m) => (
             <button
               key={m}
               type="button"
+              role="tab"
+              aria-selected={mode === m}
               onClick={() => {
                 setMode(m);
                 setError(null);
@@ -65,13 +68,14 @@ export default function AuthScreen({ onAuthed }: { onAuthed: (u: User) => void }
           ))}
         </div>
 
-        <form onSubmit={submit} className="space-y-3">
+        <form onSubmit={submit} className="space-y-3" noValidate={false}>
           <Field
             label="Username"
             value={username}
             onChange={setUsername}
             placeholder="you"
             autoFocus
+            autoComplete="username"
           />
           <Field
             label="Password"
@@ -79,10 +83,13 @@ export default function AuthScreen({ onAuthed }: { onAuthed: (u: User) => void }
             onChange={setPassword}
             placeholder="••••"
             type="password"
+            autoComplete={mode === "login" ? "current-password" : "new-password"}
           />
 
           {error && (
-            <p className="text-sm text-[var(--color-wait)] anim-fade px-1">{error}</p>
+            <p role="alert" className="text-sm text-[var(--color-wait)] anim-fade px-1">
+              {error}
+            </p>
           )}
 
           <button
@@ -105,9 +112,12 @@ export default function AuthScreen({ onAuthed }: { onAuthed: (u: User) => void }
           onClick={useDemo}
           className="w-full mt-4 text-xs text-[var(--color-muted)] hover:text-[var(--color-ink)] transition-smooth"
         >
-          Try the demo — <span className="font-mono">{DEMO_CREDENTIALS.username}</span> /{" "}
+          Try the demo, <span className="font-mono">{DEMO_CREDENTIALS.username}</span> /{" "}
           <span className="font-mono">{DEMO_CREDENTIALS.password}</span>
         </button>
+        <p className="text-[0.68rem] text-[var(--color-faint)] text-center mt-2">
+          Demo data stays in this browser.
+        </p>
       </div>
     </div>
   );
@@ -120,6 +130,7 @@ function Field({
   placeholder,
   type = "text",
   autoFocus,
+  autoComplete,
 }: {
   label: string;
   value: string;
@@ -127,6 +138,7 @@ function Field({
   placeholder?: string;
   type?: string;
   autoFocus?: boolean;
+  autoComplete?: string;
 }) {
   return (
     <label className="block">
@@ -135,6 +147,7 @@ function Field({
         type={type}
         value={value}
         autoFocus={autoFocus}
+        autoComplete={autoComplete}
         onChange={(e) => onChange(e.target.value)}
         placeholder={placeholder}
         className="w-full h-11 px-3.5 rounded-xl bg-[var(--color-surface)] border border-[var(--color-line)] text-sm outline-none transition-smooth focus:border-[var(--color-line-strong)] focus:ring-2 focus:ring-[var(--color-accent-soft)] placeholder:text-[var(--color-faint)]"
