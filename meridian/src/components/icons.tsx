@@ -1,5 +1,6 @@
 // Minimal line icons drawn to a shared 24px grid. Stroke-based to stay quiet
-// and premium against the restrained palette.
+// against the restrained palette. Icons are decorative by default; surrounding
+// controls provide the accessible name.
 
 type P = { className?: string; size?: number };
 
@@ -12,6 +13,8 @@ const base = (size: number) => ({
   strokeWidth: 1.6,
   strokeLinecap: "round" as const,
   strokeLinejoin: "round" as const,
+  'aria-hidden': true,
+  focusable: false,
 });
 
 export const ArrowUp = ({ className, size = 18 }: P) => (
@@ -47,7 +50,14 @@ export const Back = ({ className, size = 20 }: P) => (
 );
 
 export const Dot = ({ className, size = 8 }: P) => (
-  <svg width={size} height={size} viewBox="0 0 8 8" className={className}>
+  <svg
+    width={size}
+    height={size}
+    viewBox="0 0 8 8"
+    className={className}
+    aria-hidden="true"
+    focusable="false"
+  >
     <circle cx="4" cy="4" r="4" fill="currentColor" />
   </svg>
 );
