@@ -2,8 +2,11 @@
   "name": "slowmail",
   "private": true,
   "version": "1.0.0",
+  "engines": {
+    "node": ">=20.19.0"
+  },
   "scripts": {
-    "build": "cd meridian && npm install && npm run build",
+    "build": "cd meridian && npm install --no-audit --no-fund && npm run build",
     "dev": "cd meridian && npm run dev",
     "preview": "cd meridian && npm run preview",
     "format": "cd meridian && npm run format"
