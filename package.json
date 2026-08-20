@@ -2,11 +2,8 @@
   "name": "slowmail",
   "private": true,
   "version": "1.0.0",
-  "engines": {
-    "node": ">=20.19.0"
-  },
   "scripts": {
-    "build": "cd meridian && bun install --no-save && bun run build",
+    "build": "cd meridian && bun install --frozen-lockfile && bun run build",
     "dev": "cd meridian && bun run dev",
     "preview": "cd meridian && bun run preview",
     "format": "cd meridian && bun run format"
