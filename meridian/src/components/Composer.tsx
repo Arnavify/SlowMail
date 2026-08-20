@@ -45,12 +45,17 @@ export default function Composer({
   return (
     <div className="px-4 sm:px-6 pb-4 pt-2">
       {openSchedule && (
-        <div className="flex flex-wrap gap-1.5 mb-2.5 anim-rise">
+        <div
+          id="delivery-options"
+          className="flex flex-wrap gap-1.5 mb-2.5 anim-rise"
+          aria-label="Delivery timing options"
+        >
           {PRESETS.map((p) => (
             <button
               key={p.label}
               type="button"
               onClick={() => setDelayMs(p.ms)}
+              aria-pressed={delayMs === p.ms}
               className={`h-8 px-3 rounded-full text-xs transition-smooth border ${
                 delayMs === p.ms
                   ? "bg-[var(--color-accent-soft)] text-[var(--color-accent)] border-transparent"
@@ -67,7 +72,9 @@ export default function Composer({
         <button
           type="button"
           onClick={() => setOpenSchedule((v) => !v)}
-          title="Schedule delivery"
+          aria-label={openSchedule ? "Hide delivery timing" : "Schedule delivery"}
+          aria-expanded={openSchedule}
+          aria-controls="delivery-options"
           className={`shrink-0 h-9 px-2.5 rounded-xl flex items-center gap-1.5 text-xs transition-smooth ${
             openSchedule || delayMs !== DEFAULT_DELAY
               ? "text-[var(--color-accent)] bg-[var(--color-accent-soft)]"
@@ -84,6 +91,7 @@ export default function Composer({
           onChange={(e) => setText(e.target.value)}
           onKeyDown={onKeyDown}
           rows={1}
+          aria-label={`Message ${partnerName.split(" ")[0]}`}
           placeholder={`Message ${partnerName.split(" ")[0]}…`}
           className="flex-1 resize-none bg-transparent outline-none text-[0.95rem] leading-relaxed py-2 max-h-32 placeholder:text-[var(--color-faint)]"
         />
@@ -92,13 +100,14 @@ export default function Composer({
           type="button"
           onClick={send}
           disabled={!text.trim()}
+          aria-label="Send message"
           className="shrink-0 w-9 h-9 rounded-xl bg-[var(--color-ink)] text-white flex items-center justify-center transition-smooth hover:opacity-90 active:scale-95 disabled:opacity-30 disabled:scale-100"
         >
           <ArrowUp size={17} />
         </button>
       </div>
       <p className="text-[0.68rem] text-[var(--color-faint)] mt-2 px-1 text-center">
-        Delivered on real time · press Enter to send
+        Delivered in real time · press Enter to send
       </p>
     </div>
   );
