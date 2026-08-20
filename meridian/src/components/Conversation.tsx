@@ -37,8 +37,6 @@ export default function Conversation({
   const visible = thread.filter((m) => isVisibleTo(m, now, user.id));
   const pendingCount = thread.filter((m) => m.senderId === user.id && now < m.deliverAt).length;
 
-  // Keep the latest message in view. Depend on visible count so the view
-  // settles when a held message finally lands.
   useEffect(() => {
     const el = scrollRef.current;
     if (el) el.scrollTo({ top: el.scrollHeight, behavior: "smooth" });
@@ -48,27 +46,35 @@ export default function Conversation({
     <div className="flex flex-col h-full anim-fade">
       <header className="flex items-center gap-3 px-4 sm:px-6 h-16 border-b border-[var(--color-line)]">
         <button
+          type="button"
           onClick={onBack}
+          aria-label="Back to conversations"
           className="md:hidden -ml-1 w-9 h-9 rounded-lg flex items-center justify-center text-[var(--color-muted)] hover:text-[var(--color-ink)] transition-smooth"
         >
           <Back size={20} />
         </button>
-        <span className="w-9 h-9 rounded-full bg-[var(--color-accent-soft)] text-[var(--color-accent)] flex items-center justify-center text-xs font-medium">
+        <span className="w-9 h-9 rounded-full bg-[var(--color-accent-soft)] text-[var(--color-accent)] flex items-center justify-center text-xs font-medium" aria-hidden="true">
           {initials(conversation.partner.displayName)}
         </span>
         <div className="min-w-0">
           <h2 className="text-sm font-medium truncate">{conversation.partner.displayName}</h2>
-          <p className="text-xs text-[var(--color-muted)]">
+          <p className="text-xs text-[var(--color-muted)]" aria-live="polite">
             {conversation.typing
               ? "typing…"
               : pendingCount > 0
                 ? `${pendingCount} message${pendingCount > 1 ? "s" : ""} on the way`
-                : "on real time"}
+                : "in real time"}
           </p>
         </div>
       </header>
 
-      <div ref={scrollRef} className="flex-1 overflow-y-auto px-4 sm:px-6 py-6">
+      <div
+        ref={scrollRef}
+        className="flex-1 overflow-y-auto px-4 sm:px-6 py-6"
+        role="log"
+        aria-label={`Conversation with ${conversation.partner.displayName}`}
+        aria-live="polite"
+      >
         <div className="mx-auto max-w-2xl flex flex-col gap-3">
           <p className="text-center text-xs text-[var(--color-faint)] font-mono mb-2">
             messages arrive when their time comes
