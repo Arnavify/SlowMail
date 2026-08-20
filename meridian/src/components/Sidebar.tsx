@@ -33,11 +33,11 @@ export default function Sidebar({
           <span className="w-8 h-8 rounded-full bg-[var(--color-accent-soft)] text-[var(--color-accent)] flex items-center justify-center">
             <Feather size={16} />
           </span>
-          <span className="font-serif text-xl tracking-tight">Meridian</span>
+          <span className="font-serif text-xl tracking-tight">SlowMail</span>
         </div>
       </header>
 
-      <nav className="flex-1 overflow-y-auto px-2">
+      <nav className="flex-1 overflow-y-auto px-2" aria-label="Conversations">
         {conversations.map((c, i) => {
           const thread = messages.filter((m) => m.conversationId === c.id);
           const visible = thread.filter((m) => isVisibleTo(m, now, user.id));
@@ -53,7 +53,9 @@ export default function Sidebar({
           return (
             <button
               key={c.id}
+              type="button"
               onClick={() => onSelect(c.id)}
+              aria-current={active ? "page" : undefined}
               style={{ animationDelay: `${i * 40}ms` }}
               className={`anim-rise w-full text-left px-3 py-3 rounded-xl mb-0.5 flex gap-3 transition-smooth ${
                 active ? "bg-[var(--color-surface)] shadow-[0_1px_0_var(--color-line)]" : "hover:bg-[var(--color-surface)]/60"
@@ -107,6 +109,7 @@ export default function Sidebar({
           <span className="truncate text-sm">{user.displayName}</span>
         </div>
         <button
+          type="button"
           onClick={onLogout}
           className="text-xs text-[var(--color-muted)] hover:text-[var(--color-ink)] transition-smooth px-2.5 py-1.5 rounded-lg"
         >
